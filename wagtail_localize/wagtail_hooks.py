@@ -209,7 +209,13 @@ if SNIPPET_RESTART_TRANSLATION_ENABLED:
                 enabled=False
             ).exists()
 
+    class NeverShownSnippetActionMenuItem(SnippetActionMenuItem):
+        def is_shown(self, request, context):
+            return False
+
     @hooks.register("register_snippet_action_menu_item")
     def register_restart_translation_snippet_action_menu_item(model):
         if issubclass(model, TranslatableMixin):
             return RestartTranslationSnippetActionMenuItem(order=0)
+        else:
+            return NeverShownSnippetActionMenuItem()
